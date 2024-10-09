@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -34,14 +34,15 @@ export class UsersController {
      -- so it is important to just order your handlers correctly
     */
 
+     //ValidationPipe validates the decorators used at DTO definition
     @Post() //  POST /users
     // create(@Body() user: {name: string, email: string, role: 'INTERN' | 'ENGINEER' | 'ADMIN'}){
-        create(@Body() createUserDto: CreateUserDto){ //now we are using DTO
+        create(@Body(ValidationPipe) createUserDto: CreateUserDto){ //now we are using DTO
         return this.usersService.create(createUserDto)
     }
 
     @Patch(':id') //  PATCH /users/:id
-    update(@Param('id',ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto){
+    update(@Param('id',ParseIntPipe) id: number, @Body(ValidationPipe) updateUserDto: UpdateUserDto){
         return this.usersService.update(id, updateUserDto)
     }
 
